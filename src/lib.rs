@@ -116,6 +116,7 @@ const OID_COMMON_NAME :&[u64] = &[2, 5, 4, 3];
 const OID_EC_PUBLIC_KEY :&[u64] = &[1, 2, 840, 10045, 2, 1];
 const OID_EC_SECP_256_R1 :&[u64] = &[1, 2, 840, 10045, 3, 1, 7];
 const OID_EC_SECP_384_R1 :&[u64] = &[1, 3, 132, 0, 34];
+const OID_EC_SM2_256 :&[u64] = &[1, 2, 156, 10197, 1, 301];
 
 // rsaEncryption in RFC 4055
 const OID_RSA_ENCRYPTION :&[u64] = &[1, 2, 840, 113549, 1, 1, 1];
@@ -535,6 +536,8 @@ pub enum IsCa {
 	SelfSignedOnly,
 	/// The certificate may be used to sign other certificates
 	Ca(BasicConstraints),
+	/// The certificate can be signed by ca
+	NormalCert,
 }
 
 /// The path length constraint (only relevant for CA certificates)
@@ -606,7 +609,7 @@ impl ExtendedKeyUsagePurpose {
 		use ExtendedKeyUsagePurpose::*;
 		match self {
 			// anyExtendedKeyUsage
-			Any => &[2, 5, 29, 37],
+			Any => &[2, 5, 29, 37, 0],
 			// id-kp-*
 			ServerAuth => &[1, 3, 6, 1, 5, 5, 7, 3, 1],
 			ClientAuth => &[1, 3, 6, 1, 5, 5, 7, 3, 2],
@@ -671,6 +674,8 @@ pub enum KeyIdMethod {
 	Sha384,
 	/// RFC 7093 method 3
 	Sha512,
+	/// todo
+	SM3,
 }
 
 /// Helper to obtain a DateTime from year, month, day values
@@ -852,6 +857,7 @@ impl Certificate {
 				!self.params.extended_key_usages.is_empty() ||
 				self.params.name_constraints.iter().any(|c| !c.is_empty()) ||
 				matches!(self.params.is_ca, IsCa::Ca(_)) ||
+				matches!(self.params.is_ca, IsCa::NormalCert) ||
 				!self.params.custom_extensions.is_empty();
 			if should_write_exts {
 				writer.next().write_tagged(Tag::context(3), |writer| {
@@ -917,6 +923,13 @@ impl Certificate {
 									}
 								});
 							});
+						} else if let IsCa::NormalCert = self.params.is_ca {
+							// Write basic_constraints
+							Self::write_extension(writer.next(), OID_BASIC_CONSTRAINTS, true, |writer| {
+								writer.write_sequence(|writer| {
+									writer.next().write_bool(false); // cA flag
+								});
+							});
 						}
 						// Write the custom extensions
 						for ext in &self.params.custom_extensions {
@@ -968,6 +981,7 @@ impl Certificate {
 			KeyIdMethod::Sha256 => &digest::SHA256,
 			KeyIdMethod::Sha384 => &digest::SHA384,
 			KeyIdMethod::Sha512 => &digest::SHA512,
+			KeyIdMethod::SM3 => &digest::SM3_256,
 		};
 		let digest = digest::digest(digest_method, self.key_pair.public_key_raw().as_ref());
 		let truncated_digest = &digest.as_ref()[0..20];
@@ -1404,6 +1418,15 @@ pub static PKCS_ED25519 :SignatureAlgorithm = SignatureAlgorithm {
 	sign_alg :SignAlgo::EdDsa(&signature::ED25519),
 	/// id-Ed25519 in RFC 8410
 	oid_components : &[1, 3, 101, 112],
+	write_null_params : false,
+};
+
+/// ECDSA signing using the SM2-P-256 curves and SM3 hashing
+pub static PKCS_ECDSA_SM2P256_SM3 :SignatureAlgorithm = SignatureAlgorithm {
+	oids_sign_alg :&[&OID_EC_PUBLIC_KEY, &OID_EC_SM2_256],
+	sign_alg :SignAlgo::EcDsa(&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING),
+	/// sm2-with-sm3
+	oid_components : &[1, 2, 156, 10197, 1, 501],
 	write_null_params : false,
 };
 
