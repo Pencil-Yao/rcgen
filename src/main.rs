@@ -1,6 +1,6 @@
 extern crate rcgen;
 
-use rcgen::{Certificate, CertificateParams, DistinguishedName, DnType, SanType, date_time_ymd, PKCS_ECDSA_SM2P256_SM3, KeyIdMethod, ExtendedKeyUsagePurpose, CustomExtension, IsCa, BasicConstraints};
+use rcgen::{Certificate, CertificateParams, DistinguishedName, DnType, SanType, date_time_ymd, PKCS_ECDSA_SM2P256_SM3, KeyIdMethod, ExtendedKeyUsagePurpose, IsCa, BasicConstraints};
 use std::fs;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

@@ -1187,6 +1187,8 @@ impl TryFrom<&[u8]> for KeyPair {
 			(KeyPairKind::Ec(eckp), &PKCS_ECDSA_P256_SHA256)
 		} else if let Ok(eckp) = EcdsaKeyPair::from_pkcs8(&signature::ECDSA_P384_SHA384_ASN1_SIGNING, pkcs8) {
 			(KeyPairKind::Ec(eckp), &PKCS_ECDSA_P384_SHA384)
+		} else if let Ok(smkp) = EcdsaKeyPair::from_pkcs8(&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING, pkcs8) {
+			(KeyPairKind::Ec(smkp), &PKCS_ECDSA_SM2P256_SM3)
 		} else if let Ok(rsakp) = RsaKeyPair::from_pkcs8(pkcs8) {
 			(KeyPairKind::Rsa(rsakp), &PKCS_RSA_SHA256)
 		} else {
@@ -1336,6 +1338,8 @@ impl fmt::Debug for SignatureAlgorithm {
 			write!(f, "PKCS_ECDSA_P256_SHA256")
 		} else if self == &PKCS_ECDSA_P384_SHA384 {
 			write!(f, "PKCS_ECDSA_P384_SHA384")
+		} else if self == &PKCS_ECDSA_SM2P256_SM3 {
+			write!(f, "PKCS_ECDSA_SM2P256_SM3")
 		} else if self == &PKCS_ED25519 {
 			write!(f, "PKCS_ED25519")
 		} else {
@@ -1365,6 +1369,7 @@ impl SignatureAlgorithm {
 			&PKCS_RSA_SHA256,
 			&PKCS_ECDSA_P256_SHA256,
 			&PKCS_ECDSA_P384_SHA384,
+			&PKCS_ECDSA_SM2P256_SM3,
 			&PKCS_ED25519
 		];
 		ALGORITHMS.iter()
