@@ -50,6 +50,8 @@ impl fmt::Debug for SignatureAlgorithm {
 			write!(f, "PKCS_ECDSA_P256_SHA256")
 		} else if self == &PKCS_ECDSA_P384_SHA384 {
 			write!(f, "PKCS_ECDSA_P384_SHA384")
+		} else if self == &PKCS_ECDSA_SM2P256_SM3 {
+			write!(f, "PKCS_ECDSA_SM2P256_SM3")
 		} else if self == &PKCS_ED25519 {
 			write!(f, "PKCS_ED25519")
 		} else {
@@ -84,6 +86,7 @@ impl SignatureAlgorithm {
 			//&PKCS_RSA_PSS_SHA256,
 			&PKCS_ECDSA_P256_SHA256,
 			&PKCS_ECDSA_P384_SHA384,
+			&PKCS_ECDSA_SM2P256_SM3,
 			&PKCS_ED25519,
 		];
 		ALGORITHMS.iter()
@@ -178,6 +181,15 @@ pub mod algo {
 		sign_alg: SignAlgo::EdDsa(&signature::ED25519),
 		// id-Ed25519 in RFC 8410
 		oid_components: &[1, 3, 101, 112],
+		params: SignatureAlgorithmParams::None,
+	};
+
+	/// ECDSA signing using the SM2-P-256 curves and SM3 hashing
+	pub static PKCS_ECDSA_SM2P256_SM3: SignatureAlgorithm = SignatureAlgorithm {
+		oids_sign_alg: &[&OID_EC_PUBLIC_KEY, &OID_EC_SM2_256],
+		sign_alg: SignAlgo::EcDsa(&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING),
+		// sm2-with-sm3
+		oid_components: &[1, 2, 156, 10197, 1, 501],
 		params: SignatureAlgorithmParams::None,
 	};
 }

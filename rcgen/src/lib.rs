@@ -1143,6 +1143,7 @@ impl CertificateParams {
 			KeyIdMethod::Sha256 => &digest::SHA256,
 			KeyIdMethod::Sha384 => &digest::SHA384,
 			KeyIdMethod::Sha512 => &digest::SHA512,
+			KeyIdMethod::SM3 => &digest::SM3_256,
 			KeyIdMethod::PreSpecified(b) => {
 				return b.to_vec();
 			},
@@ -1361,6 +1362,8 @@ pub enum KeyIdMethod {
 	Sha384,
 	/// RFC 7093 method 3
 	Sha512,
+	/// RFC 8998
+	SM3,
 	/// Pre-specified identifier.
 	PreSpecified(Vec<u8>),
 }

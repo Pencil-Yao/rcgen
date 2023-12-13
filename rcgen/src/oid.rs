@@ -20,6 +20,8 @@ pub const OID_EC_PUBLIC_KEY: &[u64] = &[1, 2, 840, 10045, 2, 1];
 pub const OID_EC_SECP_256_R1: &[u64] = &[1, 2, 840, 10045, 3, 1, 7];
 /// secp384r1 in [RFC 5480](https://datatracker.ietf.org/doc/html/rfc5480#appendix-A)
 pub const OID_EC_SECP_384_R1: &[u64] = &[1, 3, 132, 0, 34];
+/// sm2 in [gmssl](http://gmssl.org/docs/oid.html)
+pub const OID_EC_SM2_256: &[u64] = &[1, 2, 156, 10197, 1, 301];
 
 /// rsaEncryption in [RFC 4055](https://www.rfc-editor.org/rfc/rfc4055#section-6)
 pub const OID_RSA_ENCRYPTION: &[u64] = &[1, 2, 840, 113549, 1, 1, 1];
