@@ -124,6 +124,11 @@ impl KeyPair {
 				EcdsaKeyPair::from_pkcs8(&signature::ECDSA_P384_SHA384_ASN1_SIGNING, pkcs8, rng)
 					._err()?,
 			)
+		} else if alg == &PKCS_ECDSA_SM2P256_SM3 {
+			KeyPairKind::Ec(
+				EcdsaKeyPair::from_pkcs8(&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING, pkcs8, rng)
+					._err()?,
+			)
 		} else if alg == &PKCS_RSA_SHA256 {
 			let rsakp = RsaKeyPair::from_pkcs8(pkcs8)._err()?;
 			KeyPairKind::Rsa(rsakp, &signature::RSA_PKCS1_SHA256)
@@ -161,6 +166,10 @@ impl KeyPair {
 			EcdsaKeyPair::from_pkcs8(&signature::ECDSA_P384_SHA384_ASN1_SIGNING, pkcs8, &rng)
 		{
 			(KeyPairKind::Ec(eckp), &PKCS_ECDSA_P384_SHA384)
+		} else if let Ok(smkp) =
+			EcdsaKeyPair::from_pkcs8(&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING, pkcs8, &rng)
+		{
+			(KeyPairKind::Ec(smkp), &PKCS_ECDSA_SM2P256_SM3)
 		} else if let Ok(rsakp) = RsaKeyPair::from_pkcs8(pkcs8) {
 			(
 				KeyPairKind::Rsa(rsakp, &signature::RSA_PKCS1_SHA256),
