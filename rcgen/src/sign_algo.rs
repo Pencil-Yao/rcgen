@@ -60,6 +60,8 @@ impl fmt::Debug for SignatureAlgorithm {
 			write!(f, "PKCS_ECDSA_P256_SHA256")
 		} else if self == &PKCS_ECDSA_P384_SHA384 {
 			write!(f, "PKCS_ECDSA_P384_SHA384")
+		} else if self == &PKCS_ECDSA_SM2P256_SM3 {
+			write!(f, "PKCS_ECDSA_SM2P256_SM3")
 		} else if self == &PKCS_ED25519 {
 			write!(f, "PKCS_ED25519")
 		} else {
@@ -106,6 +108,7 @@ impl SignatureAlgorithm {
 			//&PKCS_RSA_PSS_SHA256,
 			&PKCS_ECDSA_P256_SHA256,
 			&PKCS_ECDSA_P384_SHA384,
+			&PKCS_ECDSA_SM2P256_SM3,
 			#[cfg(feature = "aws_lc_rs")]
 			&PKCS_ECDSA_P521_SHA256,
 			#[cfg(feature = "aws_lc_rs")]
@@ -201,6 +204,16 @@ pub(crate) mod algo {
 		sign_alg: SignAlgo::EcDsa(&signature::ECDSA_P384_SHA384_ASN1_SIGNING),
 		// ecdsa-with-SHA384 in RFC 5758
 		oid_components: &[1, 2, 840, 10045, 4, 3, 3],
+		params: SignatureAlgorithmParams::None,
+	};
+
+	/// ECDSA signing using the SM2-P-256 curves and SM3 hashing
+	pub static PKCS_ECDSA_SM2P256_SM3: SignatureAlgorithm = SignatureAlgorithm {
+		oids_sign_alg: &[&EC_PUBLIC_KEY, &EC_SM2_256],
+		#[cfg(feature = "crypto")]
+		sign_alg: SignAlgo::EcDsa(&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING),
+		// sm2-with-sm3
+		oid_components: &[1, 2, 156, 10197, 1, 501],
 		params: SignatureAlgorithmParams::None,
 	};
 

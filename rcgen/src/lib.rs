@@ -683,6 +683,9 @@ pub enum KeyIdMethod {
 	/// RFC 7093 method 3 - a truncated SHA512 digest.
 	#[cfg(feature = "crypto")]
 	Sha512,
+	/// todo
+	#[cfg(feature = "crypto")]
+	SM3,
 	/// Pre-specified identifier. The exact given value is used as the key identifier.
 	PreSpecified(Vec<u8>),
 }
@@ -727,6 +730,8 @@ impl KeyIdMethod {
 			Self::Sha384 => &digest::SHA384,
 			#[cfg(feature = "crypto")]
 			Self::Sha512 => &digest::SHA512,
+			#[cfg(feature = "crypto")]
+			Self::SM3 => &digest::SM3_256,
 			Self::PreSpecified(b) => {
 				return b.to_vec();
 			},

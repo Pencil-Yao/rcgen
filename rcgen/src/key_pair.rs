@@ -250,6 +250,12 @@ impl KeyPair {
 				&serialized_der,
 				rng,
 			)?)
+		} else if alg == &PKCS_ECDSA_SM2P256_SM3 {
+			KeyPairKind::Ec(ecdsa_from_pkcs8(
+				&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING,
+				&serialized_der,
+				rng,
+			)?)
 		} else if alg == &PKCS_RSA_SHA256 {
 			let rsakp = RsaKeyPair::from_pkcs8(&serialized_der)._err()?;
 			KeyPairKind::Rsa(rsakp, &signature::RSA_PKCS1_SHA256)

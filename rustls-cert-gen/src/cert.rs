@@ -195,6 +195,7 @@ pub enum KeyPairAlgorithm {
 	#[default]
 	EcdsaP256,
 	EcdsaP384,
+	EcdsaSm2P256,
 	#[cfg(feature = "aws_lc_rs")]
 	EcdsaP521,
 	#[cfg(all(feature = "aws_lc_rs_unstable", not(feature = "fips")))]
@@ -212,6 +213,7 @@ impl From<KeyPairAlgorithm> for &'static SignatureAlgorithm {
 			KeyPairAlgorithm::Ed25519 => &rcgen::PKCS_ED25519,
 			KeyPairAlgorithm::EcdsaP256 => &rcgen::PKCS_ECDSA_P256_SHA256,
 			KeyPairAlgorithm::EcdsaP384 => &rcgen::PKCS_ECDSA_P384_SHA384,
+			KeyPairAlgorithm::EcdsaSm2P256 => &rcgen::PKCS_ECDSA_SM2P256_SM3,
 			#[cfg(feature = "aws_lc_rs")]
 			KeyPairAlgorithm::EcdsaP521 => &rcgen::PKCS_ECDSA_P521_SHA512,
 			#[cfg(all(feature = "aws_lc_rs_unstable", not(feature = "fips")))]
@@ -231,6 +233,7 @@ impl fmt::Display for KeyPairAlgorithm {
 			KeyPairAlgorithm::Ed25519 => write!(f, "ed25519"),
 			KeyPairAlgorithm::EcdsaP256 => write!(f, "ecdsa-p256"),
 			KeyPairAlgorithm::EcdsaP384 => write!(f, "ecdsa-p384"),
+			KeyPairAlgorithm::EcdsaSm2P256 => write!(f, "ecdsa-sm2p256"),
 			#[cfg(feature = "aws_lc_rs")]
 			KeyPairAlgorithm::EcdsaP521 => write!(f, "ecdsa-p521"),
 			#[cfg(all(feature = "aws_lc_rs_unstable", not(feature = "fips")))]
@@ -252,6 +255,7 @@ impl FromStr for KeyPairAlgorithm {
 			"ed25519" => Ok(Self::Ed25519),
 			"ecdsa-p256" => Ok(Self::EcdsaP256),
 			"ecdsa-p384" => Ok(Self::EcdsaP384),
+			"ecdsa-sm2p256" => Ok(Self::EcdsaSm2P256),
 			#[cfg(feature = "aws_lc_rs")]
 			"ecdsa-p521" => Ok(Self::EcdsaP521),
 			#[cfg(all(feature = "aws_lc_rs_unstable", not(feature = "fips")))]
