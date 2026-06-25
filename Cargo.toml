@@ -21,7 +21,7 @@ openssl = "0.10"
 pem = "3.0.2"
 pki-types = { package = "rustls-pki-types", git = "https://github.com/Pencil-Yao/pki-types", branch = "260610-smx" }
 ring = { git = "https://github.com/Pencil-Yao/ring", branch = "260610-smx" }
-rustls-webpki = { version = "0.103", features = ["ring", "std"] }
+rustls-webpki = { git = "https://github.com/Pencil-Yao/webpki", branch = "260610-smx", features = ["ring", "std"] }
 time = { version = "0.3.6", default-features = false }
 x509-parser = "0.18"
 yasna = { version = "0.6", features = ["time", "std"] }
