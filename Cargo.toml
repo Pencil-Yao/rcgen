@@ -19,7 +19,7 @@ botan = { version = "0.12", features = ["vendored"] }
 bpaf = { version = "0.9.5", features = ["derive"] }
 openssl = "0.10"
 pem = "3.0.2"
-pki-types = { package = "rustls-pki-types", version = "1.4.1" }
+pki-types = { package = "rustls-pki-types", git = "https://github.com/Pencil-Yao/pki-types", branch = "260610-smx" }
 ring = { git = "https://github.com/Pencil-Yao/ring", branch = "260610-smx" }
 rustls-webpki = { version = "0.103", features = ["ring", "std"] }
 time = { version = "0.3.6", default-features = false }
