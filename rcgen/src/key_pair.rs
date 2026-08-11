@@ -557,6 +557,10 @@ impl TryFrom<&PrivateKeyDer<'_>> for KeyPair {
 				ecdsa_from_pkcs8(&signature::ECDSA_P384_SHA384_ASN1_SIGNING, pkcs8, &rng)
 			{
 				(KeyPairKind::Ec(eckp), &PKCS_ECDSA_P384_SHA384)
+			} else if let Ok(eckp) =
+				ecdsa_from_pkcs8(&signature::ECDSA_SM2P256_SM3_ASN1_SIGNING, pkcs8, &rng)
+			{
+				(KeyPairKind::Ec(eckp), &PKCS_ECDSA_SM2P256_SM3)
 			} else if let Ok(rsakp) = RsaKeyPair::from_pkcs8(pkcs8) {
 				(
 					KeyPairKind::Rsa(rsakp, &signature::RSA_PKCS1_SHA256),
